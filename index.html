@@ -15,5 +15,52 @@
         <div>Best: <span id="best">0</span></div>
       </div>
     </div>
+    <script>
+      function calculer(a, op, b) {
+        switch (op) {
+          case "+":
+            return a + b;
+          case "-":
+            return a - b;
+          case "*":
+            return a * b;
+          case "/":
+            return a / b;
+        }
+      }
+      function rand(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+      const operationelement = document.getElementById("operation");
+      const reponseelement = document.getElementById("reponse");
+      const scoreelement = document.getElementById("score");
+      const bestelement = document.getElementById("best");
+      let reponsecorrect;
+      let score = 0;
+      function newop() {
+        const operations = ["+", "-", "*", "/"];
+        const op = operations[rand(0, 3)];
+        let a = rand(1, 10);
+        let b = rand(1, 10);
+        if (op == "/") {
+          a = a * b;
+        }
+        reponsecorrect = calculer(a, op, b);
+        operationelement.textContent = a + " " + op + " " + b;
+      }
+      function valider() {
+        if (reponseelement.value == reponsecorrect) {
+          score++;
+        }
+        scoreelement.textContent = score;
+        reponseelement.value = "";
+        newop();
+      }
+      document.getElementById("valider").onclick = valider;
+      reponseelement.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") valider();
+      });
+      newop();
+    </script>
   </body>
 </html>
