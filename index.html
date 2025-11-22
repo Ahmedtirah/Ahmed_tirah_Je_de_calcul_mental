@@ -37,6 +37,9 @@
       const bestelement = document.getElementById("best");
       let reponsecorrect;
       let score = 0;
+      const bestkey = "";
+      let best = Number(localStorage.getItem(bestkey) || 0);
+      bestelement.textContent = best;
       function newop() {
         const operations = ["+", "-", "*", "/"];
         const op = operations[rand(0, 3)];
@@ -54,6 +57,11 @@
         }
         scoreelement.textContent = score;
         reponseelement.value = "";
+        if (score > best) {
+          best = score;
+          bestelement.textContent = best;
+          localStorage.setItem(bestkey, best);
+        }
         newop();
       }
       document.getElementById("valider").onclick = valider;
