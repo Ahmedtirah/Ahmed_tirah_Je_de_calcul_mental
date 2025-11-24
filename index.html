@@ -13,6 +13,7 @@
       <div id="scorescreen">
         <div>Score: <span id="score">0</span></div>
         <div>Best: <span id="best">0</span></div>
+        <div>Time: <span id="timer">10</span>s</div>
       </div>
     </div>
     <script>
@@ -35,8 +36,11 @@
       const reponseelement = document.getElementById("reponse");
       const scoreelement = document.getElementById("score");
       const bestelement = document.getElementById("best");
+      const timerelement = document.getElementById("timer");
       let reponsecorrect;
       let score = 0;
+      let timeleft = 10;
+      let timerid;
       const bestkey = "";
       let best = Number(localStorage.getItem(bestkey) || 0);
       bestelement.textContent = best;
@@ -50,6 +54,18 @@
         }
         reponsecorrect = calculer(a, op, b);
         operationelement.textContent = a + " " + op + " " + b;
+        timeleft = 10;
+        timerelement.textContent = timeleft;
+        if (timerid) clearInterval(timerid);
+        timerid = setInterval(() => {
+          timeleft--;
+          timerelement.textContent = timeleft;
+          if (timeleft <= 0) {
+            clearInterval(timerid);
+            reponseelement.value = "";
+            newop();
+          }
+        }, 1000);
       }
       function valider() {
         if (reponseelement.value == reponsecorrect) {
