@@ -1,9 +1,77 @@
-<!DOCTYPE html>
 <html lang="fr">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Jeu de calcul mental</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background: #f2f2f7;
+      }
+      #game {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        width: 100%;
+        max-width: 400px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+      #operation {
+        font-size: 32px;
+        font-weight: bold;
+        text-align: center;
+      }
+      input {
+        font-size: 20px;
+        padding: 10px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+      }
+      button {
+        padding: 10px;
+        font-size: 16px;
+        border: none;
+        background: #007bff;
+        color: white;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+      #scorescreen {
+        display: flex;
+        justify-content: space-between;
+        font-size: 16px;
+      }
+      .flash-good {
+        animation: good 1000ms ease;
+      }
+      .flash-bad {
+        animation: bad 1000ms ease;
+      }
+      @keyframes good {
+        from {
+          background: #18a10f;
+        }
+        to {
+          background: white;
+        }
+      }
+      @keyframes bad {
+        from {
+          background: #ce2121;
+        }
+        to {
+          background: white;
+        }
+      }
+    </style>
   </head>
   <body>
     <div id="game">
@@ -17,6 +85,11 @@
       </div>
     </div>
     <script>
+      function flash(type) {
+        game.classList.remove("flash-good", "flash-bad");
+        void game.offsetWidth;
+        game.classList.add(type === "good" ? "flash-good" : "flash-bad");
+      }
       function calculer(a, op, b) {
         switch (op) {
           case "+":
@@ -37,6 +110,7 @@
       const scoreelement = document.getElementById("score");
       const bestelement = document.getElementById("best");
       const timerelement = document.getElementById("timer");
+      const game = document.getElementById("game");
       let reponsecorrect;
       let score = 0;
       let timeleft = 10;
@@ -62,6 +136,9 @@
           timerelement.textContent = timeleft;
           if (timeleft <= 0) {
             clearInterval(timerid);
+            flash("bad");
+            score = 0;
+            scoreelement.textContent = score;
             reponseelement.value = "";
             newop();
           }
@@ -70,6 +147,11 @@
       function valider() {
         if (reponseelement.value == reponsecorrect) {
           score++;
+          flash("good");
+        } else {
+          flash("bad");
+          score = 0;
+          scoreelement.textContent = score;
         }
         scoreelement.textContent = score;
         reponseelement.value = "";
@@ -85,6 +167,7 @@
         if (e.key === "Enter") valider();
       });
       newop();
+      reponseelement.focus();
     </script>
   </body>
 </html>
